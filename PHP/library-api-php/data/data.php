@@ -33,7 +33,7 @@ $bookStocks = [
     new BookStock(1, 1, true, '2025-04-10', 1),
     new BookStock(2, 2, false),
     new BookStock(3, 3, true, date('Y-m-d') , 2),
-    new BookStock(4, 4, true, date('Y-m-d') , 3)
+    new BookStock(4, 4, true, '2030-03-03' , 3)
 ];
 
 // Fines and reservations (empty arrays to start)

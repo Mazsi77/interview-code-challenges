@@ -25,20 +25,17 @@ class DataHelper
         return self::filterById($authors, $authorId, 'Author');
     }
 
-    public static function findBookStockByBookId($bookId)
+    public static function findBookStockByBookIdAndBorrowerId($bookId, $borrowerId)
     {
-        ///Question does bookStore and book always have the same id?
-        ///if yes, this method can be simplified to return the bookStock from ID directly
-        ///Quesstion 2: Can we assume that on book only has one bookStock?
         global $bookStocks;
 
         foreach ($bookStocks as $bookStock) {
-            if($bookId === $bookStock->bookId) {
+            if($bookId === $bookStock->bookId && $borrowerId === $bookStock->borrowerId) {
                 return $bookStock;
             }
         }
 
-        throw new Exception('Book stock not found.');
+        throw new Exception("Book $bookId is not on loan by borrower $borrowerId.");
     }
 
     private static function filterById($array, $id, $itemName = 'Item')

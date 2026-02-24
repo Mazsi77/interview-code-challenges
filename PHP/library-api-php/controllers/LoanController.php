@@ -28,13 +28,18 @@ class LoanController {
         }
 
         try {
+            $borrowerId = $_POST['borrowerId'];
+        } catch (Exception $e) {
+            echo json_encode(['message' => 'Borrower ID is required.']);
+        }
+
+        try {
+            //Check for exsistence of book and borrower
             $book = DataHelper::findBookById($bookId);
+            $borrower = DataHelper::findBorrowerById($borrowerId);
 
-            $bookStock = DataHelper::findBookStockByBookId($book->id);
-
-            if(false === $bookStock->isOnLoan) {
-                throw new Exception('Book is not on loan.');
-            }
+            //Check if book is borrowed by borrower
+            $bookStock = DataHelper::findBookStockByBookIdAndBorrowerId($book->id, $borrower->id);
 
             $response = [];
 
