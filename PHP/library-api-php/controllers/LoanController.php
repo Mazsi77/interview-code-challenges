@@ -17,9 +17,54 @@ class LoanController {
     
     // POST /loans/return
     public function returnBook() {
-        // TODO: Implement logic to process the return of a book and calculate fines if overdue.
         header('Content-Type: application/json');
-        echo json_encode(['message' => 'Return book functionality to be implemented.']);
+
+        try {
+            $bookId = $_POST['bookId'];
+        } catch (Exception $e) {
+            echo json_encode(['message' => 'Book ID is required.']);
+
+            return;
+        }
+
+        try {
+            $book = DataHelper::findBookById($bookId);
+
+            $bookStock = DataHelper::findBookStockByBookId($book->id);
+
+            if(false === $bookStock->isOnLoan) {
+                throw new Exception('Book is not on loan.');
+            }
+
+            $response = [];
+
+            $daysLate = floor((strtotime('now') - strtotime($bookStock->loanEndDate)) / 86400);
+
+            $bookStock->isOnLoan = false;
+            $bookStock->loanEndDate = null;
+            $bookStock->borrowerId = null;
+
+            global $bookStocks;
+            $bookstocks[$bookStock->id] = $bookStock;
+
+            if($daysLate > 0) {
+                global $fines;
+
+                $id = count($fines) + 1;
+                $fine = new Fine($id, $bookStock->borrowerId, $daysLate);
+
+                $fines[] = $fine;
+                $response['fine'] = $fine->details;
+            }
+
+            $response['message'] = 'Book returned successfully.';
+
+            echo json_encode($response);
+        } catch (Exception $e) {
+            echo json_encode(['error' => $e->getMessage()]);
+
+            return;
+        }
     }
 
     private function listActiveLoans() {
