@@ -25,6 +25,19 @@ class DataHelper
         return self::filterById($authors, $authorId, 'Author');
     }
 
+    public static function searchReservationByBookId($bookId)
+    {
+        global $reservations;
+
+        foreach ($reservations as $reservation) {
+            if($bookId == $reservation->bookId) {
+                return $reservation;
+            }
+        }
+
+        return null;
+    }
+
     public static function findBookStockByBookIdAndBorrowerId($bookId, $borrowerId)
     {
         global $bookStocks;
@@ -36,6 +49,14 @@ class DataHelper
         }
 
         throw new Exception("Book $bookId is not on loan by borrower $borrowerId.");
+    }
+
+    //Question: does book and book stock have a 1-to-1 relationship?
+    public static function findBookStockById($bookStockId)
+    {
+        global $bookStocks;
+
+        return self::filterById($bookStocks, $bookStockId, 'Book Stock');
     }
 
     private static function filterById($array, $id, $itemName = 'Item')

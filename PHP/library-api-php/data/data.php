@@ -4,6 +4,7 @@ require_once __DIR__ . '/../models/Author.php';
 require_once __DIR__ . '/../models/Book.php';
 require_once __DIR__ . '/../models/Borrower.php';
 require_once __DIR__ . '/../models/BookStock.php';
+require_once __DIR__ . '/../models/Reservation.php';
 
 // In-memory storage of data
 
@@ -28,6 +29,7 @@ $borrowers = [
     new Borrower(3, 'Tim', 'tim@example.com')
 ];
 
+//Question: book stocks and books have a 1-to-1 relationship?
 // Sample book stocks (assume book 1 is on loan)
 $bookStocks = [
     new BookStock(1, 1, true, '2025-04-10', 1),
@@ -38,4 +40,6 @@ $bookStocks = [
 
 // Fines and reservations (empty arrays to start)
 $fines = [];
-$reservations = [];
+$reservations = [
+    new Reservation(1, 3, 1, '2026-02-24')
+];
